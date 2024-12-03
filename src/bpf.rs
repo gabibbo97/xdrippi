@@ -13,7 +13,7 @@ impl BPFRedirectManager {
     pub fn attach(if_index: libc::c_uint) -> Self {
         // open object
         let bpf_object = libbpf_rs::ObjectBuilder::default()
-            .open_memory(include_bytes!("../bpf/redirect.o")).unwrap()
+            .open_memory(include_bytes!(concat!(env!("OUT_DIR"), "/redirect.o"))).unwrap()
             .load().unwrap();
 
         // attach
