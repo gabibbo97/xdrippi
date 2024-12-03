@@ -10,6 +10,9 @@ description = "An easy to understand AF_XDP library"
 readme = "README.md"
 repository = "https://github.com/gabibbo97/xdrippi"
 keywords = [ "linux", "af_xdp" ]
+exclude = [
+    "**/Makefile",
+]
 
 [profile.release]
 lto = "thin"
