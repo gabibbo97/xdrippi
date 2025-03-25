@@ -1,4 +1,4 @@
-use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, Umem, UmemAllocator, XDPSocket};
+use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, DefaultAllocator, Umem, UmemAllocator, XDPSocket};
 
 use std::{os::fd::AsRawFd, sync::Arc};
 
@@ -12,7 +12,7 @@ fn main() {
     let mut sock1 = XDPSocket::new(if1_index, 0, umem1.clone(), 4096).unwrap();
     let mut bpf1_manager = BPFRedirectManager::attach(if1_index);
     bpf1_manager.add_redirect(0, sock1.as_raw_fd());
-    let umem1_allocator = UmemAllocator::for_umem(sock1.umem.clone());
+    let umem1_allocator = DefaultAllocator::for_umem(sock1.umem.clone());
 
     // socket 2
     let if2_index = interface_name_to_index("test2").unwrap();
@@ -21,7 +21,7 @@ fn main() {
     let mut sock2 = XDPSocket::new(if2_index, 0, umem2.clone(), 4096).unwrap();
     let mut bpf2_manager = BPFRedirectManager::attach(if2_index);
     bpf2_manager.add_redirect(0, sock2.as_raw_fd());
-    let umem2_allocator = UmemAllocator::for_umem(sock2.umem.clone());
+    let umem2_allocator = DefaultAllocator::for_umem(sock2.umem.clone());
 
     // allocate fill rings
     while let Some(chunk_index) = umem1_allocator.try_allocate() {

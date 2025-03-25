@@ -101,7 +101,7 @@ impl<'a, D> XDPRing<'a, D> {
     }
 
     /// Obtain a mutable reference to the contents of the nth descriptor
-    pub const fn get_nth_descriptor_mut(&mut self, index: usize) -> &mut D {
+    pub fn get_nth_descriptor_mut(&mut self, index: usize) -> &mut D {
         &mut self.descriptors[index]
     }
 
@@ -132,7 +132,7 @@ impl<'a> XDPRing<'a, libc::xdp_desc> {
         }
     }
     /// Obtain the mutable memory slice associated with the nth descriptor, eventually updating its offset and length beforehand
-    pub const fn get_nth_slice_mut(&mut self, index: usize, umem: &Umem, set_offset: Option<u64>, set_length: Option<usize>) -> &mut [u8] {
+    pub fn get_nth_slice_mut(&mut self, index: usize, umem: &Umem, set_offset: Option<u64>, set_length: Option<usize>) -> &mut [u8] {
         let descriptor = self.get_nth_descriptor_mut(index);
         if let Some(offset) = set_offset {
             descriptor.addr = offset;
@@ -155,7 +155,7 @@ impl<'a> XDPRing<'a, u64> {
     }
 
     /// Sets the umem offset associated with the nth descriptor
-    pub const fn set_nth_umem_offset(&mut self, index: usize, umem_offset: u64) {
+    pub fn set_nth_umem_offset(&mut self, index: usize, umem_offset: u64) {
         *self.get_nth_descriptor_mut(index) = umem_offset
     }
 

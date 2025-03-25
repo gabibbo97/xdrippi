@@ -1,4 +1,4 @@
-use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, Umem, UmemAllocator, XDPSocket};
+use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, DefaultAllocator, Umem, UmemAllocator, XDPSocket};
 
 use std::{os::fd::AsRawFd, sync::Arc};
 
@@ -16,7 +16,7 @@ fn main() {
     bpf_manager.add_redirect(0, sock.as_raw_fd());
 
     // umem allocator
-    let umem_allocator = UmemAllocator::for_umem(sock.umem.clone());
+    let umem_allocator = DefaultAllocator::for_umem(sock.umem.clone());
 
     // fill the fill ring
     sock.debug_print_status();

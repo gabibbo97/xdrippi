@@ -1,16 +1,17 @@
 use std::{collections::HashMap, sync::Arc};
 use std::os::fd::AsRawFd;
 
-use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, Umem, UmemAllocator, XDPSocket};
+use xdrippi::UmemAllocator;
+use xdrippi::{utils::interface_name_to_index, BPFRedirectManager, Umem, DefaultAllocator, XDPSocket};
 
-fn setup_af_xdp_for(interface_name: &str) -> (BPFRedirectManager, XDPSocket<'_>, UmemAllocator) {
+fn setup_af_xdp_for(interface_name: &str) -> (BPFRedirectManager, XDPSocket<'_>, DefaultAllocator) {
     let if_index = interface_name_to_index(interface_name).unwrap();
     let umem = Umem::new_2k(16384).unwrap();
     let umem = Arc::new(umem);
     let sock = XDPSocket::new(if_index, 0, umem.clone(), 4096).unwrap();
     let mut bpf_manager = BPFRedirectManager::attach(if_index);
     bpf_manager.add_redirect(0, sock.as_raw_fd());
-    let umem_allocator = UmemAllocator::for_umem(umem.clone());
+    let umem_allocator = DefaultAllocator::for_umem(umem.clone());
     (bpf_manager, sock, umem_allocator)
 }
 
