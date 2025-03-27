@@ -44,4 +44,12 @@ impl UmemAllocator for ConcurrentQueueAllocator {
         true
     }
 
+    fn num_allocated(&self) -> Option<usize> {
+        Some(self.available_chunks.len())
+    }
+
+    fn num_available(&self) -> Option<usize> {
+        Some(self.available_chunks.capacity() - self.available_chunks.len())
+    }
+
 }
